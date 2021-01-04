@@ -1,46 +1,43 @@
 <template>
   <v-app>
-    <v-system-bar app>
+    <v-app-bar app dense dark>
+
+      <v-app-bar-title>Eruberg</v-app-bar-title>
+
       <v-spacer></v-spacer>
 
-      <v-icon>mdi-square</v-icon>
+      <v-btn to="/">
+        <span>Books</span>
+        <v-icon>mdi-bookshelf</v-icon>
+      </v-btn>
 
-      <v-icon>mdi-circle</v-icon>
+      <v-btn to="/recent">
+        <span>Recent</span>
+        <v-icon>mdi-history</v-icon>
+      </v-btn>
 
-      <v-icon>mdi-triangle</v-icon>
-    </v-system-bar>
-
-    <v-app-bar app>
-      <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
-
-      <v-toolbar-title>Eruberg</v-toolbar-title>
     </v-app-bar>
 
-    <v-navigation-drawer v-model="drawer" fixed temporary>
-      <!--  -->
-    </v-navigation-drawer>
-
     <v-main>
-      <HelloWorld />
+      <keep-alive>
+        <router-view/>
+      </keep-alive>
     </v-main>
   </v-app>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld'
+// import HelloWorld from './components/HelloWorld'
 
 export default {
   name: 'App',
 
   components: {
-    HelloWorld
+
   },
 
   data: () => ({
-    drawer: null
-  }),
-  mounted () {
-    this.$store.dispatch('fetchNextPage')
-  }
+
+  })
 }
 </script>

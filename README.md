@@ -1,4 +1,9 @@
-# eruberg
+# Eruberg
+
+## Overview
+Browesing app for API located at http://gutendex.com/  
+Includes a Books (browesing) page with a simple paginator, and a Recents page with books viewed during the current session (clears on refresh).
+
 
 ## Project setup
 ```
@@ -19,6 +24,3 @@ yarn build
 ```
 yarn lint
 ```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).

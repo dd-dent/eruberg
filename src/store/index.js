@@ -7,36 +7,52 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     books: null,
-    prevURL: null,
-    nextURL: 'http://gutendex.com/books/'
+    recentBooks: [],
+    recentBookIds: new Set(),
+    previousPage: null,
+    nextPage: 'http://gutendex.com/books/',
+    pageLoading: false
   },
   mutations: {
-    updateBooks (state, payload) {
-      state.books = payload.books
+    togglePageLoading (state) {
+      state.pageLoading = !state.pageLoading
     },
-    updatePaginationLinks (state, payload) {
-      console.log(payload)
-      state.prevURL = payload.prevURL
-      state.nextURL = payload.nextURL
+    setState (state, payload) {
+      state.books = payload.books
+      state.previousPage = payload.previousPage
+      state.nextPage = payload.nextPage
+    },
+    addToRecent (state, { book }) {
+      if (!state.recentBookIds.has(book.id)) {
+        state.recentBookIds.add(book.id)
+        state.recentBooks.push(book)
+      }
     }
-
   },
   actions: {
-    async fetchNextPage ({ commit, state }) {
-      const response = await axios.get(state.nextURL)
-      console.log(response.data)
+    async getPage ({ commit, state }, { pageUrl }) {
+      if (state.loading) {
+        return
+      }
+      commit('togglePageLoading')
+      const response = await axios.get(pageUrl)
       commit({
-        type: 'updatePaginationLinks',
-        prevURL: state.nextURL,
-        nextURL: response.data.next
+        type: 'setState',
+        books: response.data.results,
+        previousPage: response.data.previous,
+        nextPage: response.data.next
       })
-      commit({
-        type: 'updateBooks',
-        books: response.data.results
-      })
+      commit('togglePageLoading')
+    },
+    async getBook ({ commit }, { bookId }) {
+      const response = await axios.get(`http://gutendex.com/books/${bookId}`)
+      commit('addToRecent', { book: response.data })
+      return response.data
     }
   },
   getters: {
-
+    books: (state) => {
+      return state.books
+    }
   }
 })
